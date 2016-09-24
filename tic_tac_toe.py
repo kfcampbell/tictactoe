@@ -1,11 +1,11 @@
 #!/usr/local/bin/python
 """ tic_tac_toe class:
-    memers: 2d list for a board, player_a_letter, player_b_letter """
+    members: 2d list for a board, player_a_letter, player_b_letter, a string to aid in printing boards """
 class tic_tac_toe():
     
-    def __init__(self, player_a_letter, player_b_letter):
-        self.player_a_letter = player_a_letter
-        self.player_b_letter = player_b_letter
+    def __init__(self, player_letter, cpu_letter):
+        self.player_letter = player_letter
+        self.cpu_letter = cpu_letter
         self.board = []
         self.board.append([])
         self.divide = "-------------"
@@ -47,13 +47,14 @@ class tic_tac_toe():
             return False
 
         # now need to check whether the number is in an empty spot on the board.
-        # need some mechanism to translate 1-9 into coordinates on the board.
+        # coords = to_coords(num) # to_coords is still in progress
 
         return True
 
     """ takes in a numeral 1-9 and returns a pair of x,y values in a list that correspond to the tic-tac-toe board coordinates """
     def to_coords(self, num):
         # probably a python dictionary would be the best way to handle this.
+        return True # placeholder
 
 
     def run_loop(self):
@@ -75,14 +76,13 @@ class tic_tac_toe():
     """ start the actual input sequence in main """
     def main(self):
         self.initialize_board()
-
-        print("You'll be player A and I'll be player B.")
+        print("Hello and welcome to the tic tac toe game!")
+        print "You'll be " + self.player_letter + " and I'll be " + self.cpu_letter + "."
 
         # start the actual game.
         self.run_loop()
 
 
 if __name__ == '__main__':
-    print("Hello and welcome to the tic tac toe game!")
     game = tic_tac_toe('X', 'O')
     game.main()
