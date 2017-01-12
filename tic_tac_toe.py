@@ -45,16 +45,37 @@ class tic_tac_toe():
         elif num < 1:
             print("Uh oh: your input isn't valid. Try again.")
             return False
+        else:
+            coords = self.to_coords(num)
+            check_square(coords)
+            print "made it to else", coords
+            return True
 
         # now need to check whether the number is in an empty spot on the board.
-        # coords = to_coords(num) # to_coords is still in progress
+        # coords = to_coords(num)
+        # print "this is the returned coords: " + coords
 
-        return True
+        # return True
 
     """ takes in a numeral 1-9 and returns a pair of x,y values in a list that correspond to the tic-tac-toe board coordinates """
     def to_coords(self, num):
-        # probably a python dictionary would be the best way to handle this.
-        return True # placeholder
+        # not sure this is the best way to handle this.
+        options = {
+                1 : [0,0],
+                2 : [0,1],
+                3 : [0,2],
+                4 : [1,0],
+                5 : [1,1],
+                6 : [1,2],
+                7 : [2,0],
+                8 : [2,1],
+                9 : [2,2]
+            }
+        return options[num]
+
+    def check_square(self, square):
+        # this is a method to check if there's a computer_letter or a player_letter in the spot.
+        print board[square]
 
 
     def run_loop(self):
@@ -68,7 +89,7 @@ class tic_tac_toe():
                 if is_valid:
                     break
             except:
-                print("Uh oh: your input isn't valid. Try again.")
+                print("Uh oh: there was an exception and your input isn't valid. Try again.")
 
         print "Out of the loop"
 
