@@ -1,7 +1,10 @@
 #!/usr/local/bin/python
 """ tic_tac_toe class:
     members: 2d list for a board, player_a_letter, player_b_letter, a string to aid in printing boards """
-class tic_tac_toe():
+import random
+
+
+class TicTacToe:
     
     def __init__(self, player_letter, cpu_letter):
         self.player_letter = player_letter
@@ -29,11 +32,12 @@ class tic_tac_toe():
         row = [7, 8, 9]
         self.print_row(row)
 
-    def print_row(self, chars):
+    @staticmethod
+    def print_row(chars):
         print("  " + str(chars[0]) + " | " + str(chars[1]) + " | " + str(chars[2]) + "  ")
 
     def initialize_board(self):
-        self.board = [['0' for j in range(3)] for i in range(3)]
+        self.board = [[' ' for j in range(3)] for i in range(3)]
 
     def is_valid_input(self, num):
         if not isinstance(num, (int)):
@@ -47,51 +51,75 @@ class tic_tac_toe():
             return False
         else:
             coords = self.to_coords(num)
-            check_square(coords)
-            print "made it to else", coords
-            return True
-
-        # now need to check whether the number is in an empty spot on the board.
-        # coords = to_coords(num)
-        # print "this is the returned coords: " + coords
-
-        # return True
+            return self.check_square(coords)
 
     """ takes in a numeral 1-9 and returns a pair of x,y values in a list that correspond to the tic-tac-toe board coordinates """
     def to_coords(self, num):
         # not sure this is the best way to handle this.
         options = {
-                1 : [0,0],
-                2 : [0,1],
-                3 : [0,2],
-                4 : [1,0],
-                5 : [1,1],
-                6 : [1,2],
-                7 : [2,0],
-                8 : [2,1],
-                9 : [2,2]
+                1: [0, 0],
+                2: [0, 1],
+                3: [0, 2],
+                4: [1, 0],
+                5: [1, 1],
+                6: [1, 2],
+                7: [2, 0],
+                8: [2, 1],
+                9: [2, 2]
             }
         return options[num]
 
     def check_square(self, square):
-        # this is a method to check if there's a computer_letter or a player_letter in the spot.
-        print board[square]
+        return self.board[square[0]][square[1]] is not self.player_letter and self.board[square[0]][square[1]] is not self.cpu_letter
+
+    def make_random_move(self):
+        x = random.randint(0, 2)
+        y = random.randint(0, 2)
+        if self.check_square([x, y]):
+            self.board[x][y] = self.cpu_letter
+            return
+        else:
+            self.make_random_move()
+
+    def is_game_over(self):
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] is ' ':
+                    return False
+        return True
+
+    def check_winner(self):
+        return True
 
 
     def run_loop(self):
-        self.print_input_board()
-        is_valid = False
-
-        while is_valid != True:
+        while True:
+            if self.is_game_over():
+                break
             try:
-                move_square = int(input("Enter the number for where you want to move and press the Enter key: "))
+                print "Current board: \n"
+                self.print_board()
+                print "\n\nInput board: \n"
+                self.print_input_board()
+                move_square = int(input("\nEnter the number for where you want to move and press the Enter key: "))
                 is_valid = self.is_valid_input(move_square)
                 if is_valid:
-                    break
+                    coords = self.to_coords(move_square)
+                    self.board[coords[0]][coords[1]] = self.player_letter
+                    if not self.is_game_over():
+                        self.make_random_move()
+                        continue
+                    else:
+                        break
+                else:
+                    print("Uh oh, your input wasn't valid. Try again.")
             except:
                 print("Uh oh: there was an exception and your input isn't valid. Try again.")
 
-        print "Out of the loop"
+        print "Out of the loop. Game over"
+        print "Final game board: "
+        self.print_board()
+        self.check_winner()
 
 
     """ start the actual input sequence in main """
@@ -105,5 +133,5 @@ class tic_tac_toe():
 
 
 if __name__ == '__main__':
-    game = tic_tac_toe('X', 'O')
+    game = TicTacToe('X', 'O')
     game.main()
