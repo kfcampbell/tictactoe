@@ -5,7 +5,6 @@ import random
 
 
 class TicTacToe:
-    
     def __init__(self, player_letter, cpu_letter):
         self.player_letter = player_letter
         self.cpu_letter = cpu_letter
@@ -14,6 +13,7 @@ class TicTacToe:
         self.divide = "-------------"
 
     """ print the board """
+
     def print_board(self):
         self.print_row(self.board[0])
         print(self.divide)
@@ -22,6 +22,7 @@ class TicTacToe:
         self.print_row(self.board[2])
 
     """ print the input board so the user knows where to move """
+
     def print_input_board(self):
         row = [1, 2, 3]
         self.print_row(row)
@@ -43,7 +44,7 @@ class TicTacToe:
         if not isinstance(num, (int)):
             print("Uh oh: your input isn't valid. Try again.")
             return False
-        elif num > 9:    
+        elif num > 9:
             print("Uh oh: your input isn't valid. Try again.")
             return False
         elif num < 1:
@@ -54,23 +55,25 @@ class TicTacToe:
             return self.check_square(coords)
 
     """ takes in a numeral 1-9 and returns a pair of x,y values in a list that correspond to the tic-tac-toe board coordinates """
+
     def to_coords(self, num):
         # not sure this is the best way to handle this.
         options = {
-                1: [0, 0],
-                2: [0, 1],
-                3: [0, 2],
-                4: [1, 0],
-                5: [1, 1],
-                6: [1, 2],
-                7: [2, 0],
-                8: [2, 1],
-                9: [2, 2]
-            }
+            1: [0, 0],
+            2: [0, 1],
+            3: [0, 2],
+            4: [1, 0],
+            5: [1, 1],
+            6: [1, 2],
+            7: [2, 0],
+            8: [2, 1],
+            9: [2, 2]
+        }
         return options[num]
 
     def check_square(self, square):
-        return self.board[square[0]][square[1]] is not self.player_letter and self.board[square[0]][square[1]] is not self.cpu_letter
+        return self.board[square[0]][square[1]] is not self.player_letter and self.board[square[0]][
+                                                                                  square[1]] is not self.cpu_letter
 
     def make_random_move(self):
         x = random.randint(0, 2)
@@ -81,20 +84,44 @@ class TicTacToe:
         else:
             self.make_random_move()
 
-    def is_game_over(self):
-        for i in range(3):
-            for j in range(3):
-                if self.board[i][j] is ' ':
-                    return False
-        return True
-
     def check_winner(self):
-        return True
+        if self.check_winner_by_letter(self.player_letter):
+            return self.player_letter
+        elif self.check_winner_by_letter(self.cpu_letter):
+            return self.cpu_letter
+        else:
+            return None
 
+    def check_winner_by_letter(self, letter):
+        # top horizontal
+        if self.board[0][0] == self.board[0][1] == self.board[0][2] == letter:
+            return True
+        # middle horizontal
+        elif self.board[1][0] == self.board[1][1] == self.board[1][2] == letter:
+            return True
+        # low horizontal
+        elif self.board[2][0] == self.board[2][1] == self.board[2][2] == letter:
+            return True
+        # left vertical
+        elif self.board[0][0] == self.board[1][0] == self.board[2][0] == letter:
+            return True
+        # middle vertical
+        elif self.board[0][1] == self.board[1][1] == self.board[2][1] == letter:
+            return True
+        # right vertical
+        elif self.board[0][2] == self.board[1][2] == self.board[2][2] == letter:
+            return True
+        # LR diagonal
+        elif self.board[0][0] == self.board[1][1] == self.board[2][2] == letter:
+            return True
+        elif self.board[0][2] == self.board[1][1] == self.board[2][0] == letter:
+            return True
+        else:
+            return False
 
     def run_loop(self):
         while True:
-            if self.is_game_over():
+            if self.check_winner() is not None:
                 break
             try:
                 print "Current board: \n"
@@ -106,7 +133,7 @@ class TicTacToe:
                 if is_valid:
                     coords = self.to_coords(move_square)
                     self.board[coords[0]][coords[1]] = self.player_letter
-                    if not self.is_game_over():
+                    if self.check_winner() is None:
                         self.make_random_move()
                         continue
                     else:
@@ -116,11 +143,17 @@ class TicTacToe:
             except:
                 print("Uh oh: there was an exception and your input isn't valid. Try again.")
 
-        print "Out of the loop. Game over"
         print "Final game board: "
         self.print_board()
-        self.check_winner()
 
+        result = self.check_winner()
+
+        if result is self.player_letter:
+            print "Congratulations, you won!"
+        elif result is self.cpu_letter:
+            print "Haha! I beat you!"
+        else:
+            print "The battle of man vs. machine was inconclusive."
 
     """ start the actual input sequence in main """
     def main(self):
